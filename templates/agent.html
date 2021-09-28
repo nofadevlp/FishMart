@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% block body %}
+<section id="hero">
+    <div class="hero-container" data-aos="fade-up">
+     <div class="jumbotron p-3">
+                 <h2>Manage <b>Agent</b>
+
+                     <!---------------- Button modal----------------->
+                     <button id="myBtn" type="button" class="btn btn-success btn-x btn-lg"
+                             data-bs-toggle="modal" data-bs-target="#myagent">Add Agent</button>
+                     <button id="Btn" type="button" class="btn btn-primary  btn-lg float-right "
+                             data-bs-toggle="modal" data-bs-target="#modal">Search Agent</button>
+          </h2>
+                     <div id="modal" class="modal fade" role="dialog">
+	                <div class="modal-dialog modal-dialog-scrollable">
+	            	    <div class="modal-content">
+                            <div class="modal-header "> <div><h4 class="modal-title" style="color:#e9ecef;
+                              text-align: center;"><b>Search Agent</b>  </h4></div>
+                         </div>
+			             <div class="modal-body">
+                            <form action="{{url_for('agent', page_num=agent.page)}}" method="POST">
+				    	        <div class="form-group">
+						            <div class="row">
+                                        <div>
+                                            <input type="text" name="serial"></div>
+                                      <div class="col-md-6 form-group">
+                                          <div class="col-md-6 form-group" style="justify-content:center; height:auto; margin-top:5px;margin-bottom:5px;">
+                                              <div class="col"><button class="btn btn-primary btn-lg" type="submit">Search</button></div>
+                                          </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
+                         </div>
+                        </div>
+                      </div>
+                    </div>
+
+                 {% with messages= get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <div class="alert alert-success alert-dimissble" role="alert">
+                     {{message}}
+                     <button type="button" class="btn-close" data-dismiss="alert"
+                              onclick="close()"></button>
+                 </div>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+     </div>
+     <div class="col-md-9">
+            <table id="table_id" style="width:100%" border="1"  class="table display table-bordered table-hover table-responsive table-striped table-light table-sm datatable">
+                <tr aria-owns="10">
+                  <th> Agent name</th>
+                  <th> Agent serial number</th>
+                  <th colspan="2"> Actions </th>
+                </tr>
+                 {% for row in agent.items %}
+                <tr>
+                     <td>{{row.agent_name}}</td>
+                    <td>{{row.agent_serial}}</td>
+                     <td>
+                         <a href="/update_agent/{{row.agent_id}}" class="btn btn-warning btn-x btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#agentedit{{row.agent_id}}">Edit</a>
+                     </td>
+                    <td>
+                         <a href="/delete_agent/{{row.agent_id}}" class="btn btn-danger btn-x btn-lg"
+                            onclick="return confirm('Are you sure to delete')">Delete</a>
+                    </td>
+                </tr>
+             <div id="agentedit{{row.agent_id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+                 <div class="modal-content">
+                     <div class="modal-header ">
+                         <div>
+                             <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                                 <b> Agent </b>
+                             </h4>
+                               </div>
+                     </div>
+                     <div class="modal-body">
+                        <form action="{{url_for('update_agent')}}" style="margin-left=300px;" method="POST">
+                            <div class="form-group">
+                                <div class="col">
+                                    <input type="hidden" value="{{row.agent_id}}" name="id">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent_name" class="input-group-addon"> Agent name </label>
+                                        <input type="text" class="form-control"
+                                       name="agent" id="agent_name" value="{{row.agent_name}}" placeholder="Agent name" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent_serial" class="input-group-addon"> Agent serial </label>
+                                        <input type="text" class="form-control"
+                                       name="serial" id="agent_serial" value="{{row.agent_serial}}" placeholder="Agent serial" required>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                    <div class="col">
+                                        <button class="btn btn-primary btn-lg" type="submit">Edit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                     </div>
+                 </div>
+                </div>
+             </div>
+           {% endfor %}
+
+     </table>
+     </div>
+        <div class="row">
+         <ul class="pagination">
+            {% if agent.has_prev  %}
+                  <li class="page-item"><a class="page-link"
+                    href="{{ url_for('agent', page_num=agent.prev_num) }}">
+                    <<</a></li>
+                {% else %}
+                    <li class="page-item disabled">
+                <span class="page-link"><<
+                </span></li>
+            {% endif %}
+
+            {% for page in agent.iter_pages(left_edge=3, right_edge=3) %}
+                    {% if page %}
+                    <li class="page-item"><a class="page-link"
+                        href="{{ url_for('agent', page_num=page) }}">
+                        {{page}}</a></li>
+                    {% else %}
+                    <li class="page-item disabled" id="example_ellipsis">
+                        <a class="page-link" href="#" >
+                        {{page}}</a></li>
+                    {% endif%}
+            {% endfor %}
+             {% if agent.has_next  %}
+                  <li class="page-item"><a class="page-link"
+                    href="{{ url_for('agent', page_num=agent.next_num) }}">
+                    >></a></li>
+                {% else %}
+                    <li class="page-item disabled">
+                <span class="page-link">
+                    >>
+                </span></li>
+
+            {% endif %}
+
+             <li class="page-item ">
+                <a href="{{url_for('agent', page_num=agent.page)}}" style="font-color:blue" class="page-link ">
+                         All
+                     </a></li>
+
+        </ul>
+    </div>
+        <div class="row">
+             <div id="myagent" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+                 <div class="modal-content">
+                     <div class="modal-header ">
+                         <div>
+                             <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                                 <b> Agent</b>
+                             </h4>
+                         </div>
+                     </div>
+                     <div class="modal-body">
+                        <form action="{{url_for('add_agent')}}" style="margin-left=300px;" method="POST">
+                            <div class="form-group">
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent" class="input-group-addon"> Agent name </label>
+                                        <input type="text" class="form-control"
+                                       name="agent" id="agent" placeholder="Agent name" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent" class="input-group-addon"> Agent Serial </label>
+                                        <input type="text" class="form-control"
+                                       name="serial" id="serial" placeholder="Agent Serial" required>
+                                    </div>
+                                </div>
+
+                                <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                    <div class="col">
+                                        <button class="btn btn-primary" type="submit"
+                                            data-bs-toggle="modal" data-bs-target="#myagent">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                      </div>
+                 </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</section>
+ <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        &copy; Copyright <strong><span>CFA</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer>
+ <!-- End Footer -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ {% endblock %}

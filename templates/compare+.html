@@ -1,0 +1,54 @@
+{% extends 'base_reports.html' %}
+{% block body %}
+<div align="center">
+     <div class="jumbotron p-3">
+        <div style="margin:10px 0 0 10px; width:600px">
+            <h2 style="font-family:Arial;">
+                Report of Summary Orders
+            </h2>
+         </div>
+     </div>
+<table  border="1" class="table table-bordered table-hover table-striped">
+                 <caption>
+                  Summary of Orders
+                 </caption>
+           <tbody>
+           <tr aria-owns="10">
+                  <th>Fish </th>
+                  <th>Total Quantity Request</th>
+                  <th> State</th>
+
+                </tr>
+                 {% for row in total %}
+                <tr>
+                    <td>{{row.fish_type}}</td>
+                    <td>{{row.total_request}}</td>
+                    <td>{{row.state}}</td>
+                    {% endfor %}
+                </tr>
+    </tbody>
+    <tfoot>
+    {%for t in total_%}
+    <td align="right"> Total Requestd  </td>
+    <td align="left">{{t[1]}}</td>
+    <td aria-hidden="true"></td>
+    {% endfor %}
+    </tfoot>
+</table>
+<div class="col-md-5">
+<table border="1" class="table table-hover table-striped">
+    <th> Percantage </th>
+    <th> State </th>
+    {% for col in a %}
+    <tr>
+        <td>{{col[0]}}<b>%</b></td>
+        <td>{{col[1]}}</td>
+    {% endfor %}
+    </tr>
+</table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</div>
+{% endblock %}

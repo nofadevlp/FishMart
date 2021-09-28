@@ -1,0 +1,38 @@
+{% extends 'base_reports.html' %}
+{% block body %}
+
+     <div class="jumbotron p-3">
+        <div style="margin:10px 0 0 10px; width:600px">
+            <h2 style="font-family:Arial;">
+                Report of Prndent Orders
+            </h2>
+         </div>
+     </div>
+<table  border="1" class="table table-bordered table-hover table-striped">
+                 <caption>
+                     Orders
+                 </caption>
+                <tr aria-owns="10">
+                  <th>Order id</th>
+                  <th>Fish</th>
+                  <th>Quantity</th>
+                  <th>Agent</th>
+                  <th>Date</th>
+                  <th>State</th>
+                </tr>
+                 {% for row in order %}
+                <tr>
+                     <td>{{row.order_id}}</td>
+                    <td>{{row.fish_type}}</td>
+                    <td>{{row.quantity_kg}}</td>
+                    <td>{{row.agent}}</td>
+                    <td>{{row.order_date}}</td>
+                    <td>{{row.state}}</td>
+               {% endfor %}
+                </tr>
+
+</table>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+{% endblock%}

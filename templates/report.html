@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block body %}
+<section id="hero">
+<div class="hero-container" data-aos="fade-up">
+    <div class="jumbotron p-3">
+        <div style="margin:10px 0 0 10px; width:600px">
+
+        </div>
+        <!------------------------------------------------------------------------------>
+            <div class="clear-fix b-group">
+                    <button id="myBtn" target="_blank" type="button"
+                            class="btn-reports btn-outline-dark btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#mymodal">
+                         Report for specific  loads date
+                    </button>
+                <br>
+            <!------------------------------------------------------------------------------>
+                    <button id="myBtn1" target="_blank" type="button" class="btn-reports btn-outline-dark btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#mymodal1">
+                         Report All Loads by Boats</button>
+                <br>
+                  <!------------------------------------------------------------------------------>
+                    <button id="myBtn2" target="_blank"  type="button" class="btn-reports btn-outline-dark btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#mymodal3">
+                         Report Summary of orders</button>
+
+                <br>
+                  <!------------------------------------------------------------------------------>
+                  <!----------------------{{url_for('distribute_report')}}------------------------->
+                    <button id="myBtn3" target="_blank"  type="button" class="btn-reports btn-outline-dark btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#mymodal4">
+                         Report Distribute Batches</button>
+
+                <br>
+            <!---------------------------{{url_for('order_report')}}--------------------------------------------------->
+                    <a href="/order_report" target="_blank" class="btn-reports btn-outline-dark btn-lg"
+                       onclick="{{url_for('order_report')}}">
+                         Report of Pendent Orders
+                    </a>
+
+                 <br>
+            <!------------------------------{{url_for('show')}}---------------------------------------------------->
+                    <a href="/show+relation" target="_blank" class="btn-reports btn-outline-dark btn-lg"
+                       onclick="{{url_for('show')}}">
+                        Report Monthly
+                    </a>
+
+         </div>
+       </div>
+<!------- {{url_for('load_report')}} -------------->
+  <div id="mymodal" class="modal fade" role="dialog">
+	        <div class="modal-dialog modal-dialog-scrollable">
+	         <div class="modal-content">
+                    <div class="modal-body">
+               <form action="{{url_for('load_report')}}" method="POST">
+                   <div class="form-group mt-3">
+                        <input type="date" class="form-control"
+                               name="load_date1" id="load_date1" placeholder="Date of Load" required>
+                   </div>
+                   <div class="form-group mt-3">
+                        <input type="date" class="form-control"
+                               name="load_date2" id="load_date2" placeholder="Date of Load" required>
+                   </div>
+                   <div class="form-group mt-3">
+                     <span class="input-group-addon">SelectBoat</span>
+                        <input type="text" name="boat" class="form-control" placeholder="Boats License">
+                   </div>
+                  <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                          <div class="col"><button class="btn btn-primary" type="submit">Add</button></div>
+                  </div>
+                </form>
+             </div>
+          </div>
+        </div>
+      </div>
+    <!------- {{url_for('boat_report')}} -------------->
+   <div id="mymodal1" class="modal fade" role="dialog">
+	        <div class="modal-dialog modal-dialog-scrollable">
+	         <div class="modal-content">
+                    <div class="modal-body">
+             <form action="{{url_for('boat_report')}}" method="POST">
+               <div class="form-group mt-3">
+                  <input type="date" class="form-control"
+                     name="load_date1" placeholder="Date of Load" required>
+               </div>
+               <div class="form-group mt-3">
+                   <input type="date" class="form-control"
+                       name="load_date2"  placeholder="Date of Load" required>
+               </div>
+               <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                  <div class="col"><button class="btn btn-primary" type="submit">Go</button>
+                </div>
+              </div>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+        <!------- {{url_for('compare')}} -------------->
+     <div id="mymodal3" class="modal fade" role="dialog">
+	        <div class="modal-dialog modal-dialog-scrollable">
+	         <div class="modal-content">
+                    <div class="modal-body">
+             <form action="{{url_for('compare')}}" method="POST">
+               <div class="form-group mt-3">
+                  <input type="date" class="form-control"
+                     name="load_date1" placeholder="Date of Load" required>
+               </div>
+               <div class="form-group mt-3">
+                   <input type="date" class="form-control"
+                       name="load_date2"  placeholder="Date of Load" required>
+               </div>
+               <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                  <div class="col"><button class="btn btn-primary" type="submit">Go</button>
+                </div>
+              </div>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+   <!------- {{url_for('compare')}} -------------->
+     <div id="mymodal4" class="modal fade" role="dialog">
+	        <div class="modal-dialog modal-dialog-scrollable">
+	         <div class="modal-content">
+                    <div class="modal-body">
+             <form action="{{url_for('distribute_report')}}" method="POST">
+               <div class="form-group mt-3">
+                  <input type="date" class="form-control"
+                     name="load_date1" placeholder="Date of Load" required>
+               </div>
+               <div class="form-group mt-3">
+                   <input type="date" class="form-control"
+                       name="load_date2"  placeholder="Date of Load" required>
+               </div>
+                 <div class="form-group mt-3">
+                   <input type="text" class="form-control"
+                       name="batch"  placeholder="Batch No">
+               </div>
+
+               <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                  <div class="col"><button class="btn btn-primary" type="submit">Go</button>
+                </div>
+              </div>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+</div>
+</section>
+
+ <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        &copy; Copyright <strong><span>CFA</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- . -->
+        <!-- . -->
+        <!-- -->
+        <!-- -->
+      </div>
+    </div>
+  </footer>
+ <!-- End Footer -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+{% endblock %}

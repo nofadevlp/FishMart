@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% block body %}
+
+ <!---------------------------------------MODEL Order----------------------------------->
+<section id="hero">
+    <div class="hero-container " data-aos="fade-up">
+     <div class="jumbotron p-3">
+                 <h2>Manage <b>Orders</b>
+                     <!---------------- Button modal----------------->
+                     <button id="myBtn" type="button" class="btn btn-success  btn-lg float-right"
+                             data-bs-toggle="modal" data-bs-target="#mymodal">Add Order</button>
+                     <button id="Btn" type="button" class="btn btn-primary  btn-lg float-right "
+                             data-bs-toggle="modal" data-bs-target="#modal">Search Order</button>
+                 </h2>
+         <!---------------------------------------- SEARCH----------------------------------------->
+                 {% with messages= get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <div class="alert alert-success alert-dimissble" role="alert">
+                     {{message}}
+                     <button type="button" class="btn-close" data-dismiss="alert"
+                              onclick="close()"></button>
+                 </div>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+             </div>
+                     <div id="modal" class="modal fade" role="dialog">
+	                <div class="modal-dialog modal-dialog-scrollable">
+	            	    <div class="modal-content">
+                            <div class="modal-header "> <div><h4 class="modal-title" style="color:#e9ecef;
+                              text-align: center;"><b>Search Order</b>  </h4></div>
+                         </div>
+			             <div class="modal-body">
+                            <form action="{{url_for('order', page_num=orders.page)}}" method="POST">
+				    	        <div class="form-group">
+						            <div class="row">
+                                        <div>
+                                            <input type="text" name="order_id"></div>
+                                      <div class="col-md-6 form-group">
+                                          <div class="col-md-6 form-group" style="justify-content:center; height:auto; margin-top:5px;margin-bottom:5px;">
+                                              <div class="col"><button class="btn btn-primary btn-lg" type="submit">Search</button></div>
+                                          </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
+                         </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+        <div class="col-md-9">
+             <table style="width:100%" border="1"  class="table table-bordered table-hover table-responsive table-striped table-light table-sm datatable">
+                <tr aria-owns="10" >
+                  <th scope="col">Fish</th>
+                  <th scope="col">Quantity In KG</th>
+                  <th scope="col">Agent</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">State</th>
+                  <th colspan="2" scope="col"> Actions </th>
+                </tr>
+                           {% for orders in orders.items %}
+            <tr>
+
+            <td scope="orders">{{orders.fish_type}}</td>
+            <td scope="orders">{{orders.quantity_kg}}</td>
+            <td scope="orders">{{orders.agent}}</td>
+            <td scope="orders">{{orders.order_date}}</td>
+            <td scope="orders">{{orders.state}}</td>
+            <td scope="orders">
+                <a href="/update_order/{{orders.order_id}}" class="btn btn-warning btn-x btn-lg"
+                   data-bs-toggle="modal" data-bs-target="#modal_edit{{orders.order_id}}">Edit</a>
+            </td>
+            <td>
+                <a href="/delete_order/{{orders.order_id}}" class="btn btn-danger btn-x btn-lg"
+                   onclick="return confirm('Are you sure to delete')">Delete</a>
+            </td>
+                </tr>
+
+                      <!-----------------MODEL ORDEA UPDATE --------------------->
+                 <div id="modal_edit{{orders.order_id}}" class="modal fade" role="dialog">
+	                <div class="modal-dialog modal-dialog-scrollable">
+	            	    <div class="modal-content">
+                            <div class="modal-header "> <div><h4 class="modal-title" style="color:#e9ecef;
+                              text-align: center;"><b>Edit Order</b>  </h4></div>
+                         </div>
+			             <div class="modal-body">
+                            <form action="{{url_for('update_order')}}" method="POST">
+				    	        <div class="form-group">
+						            <div class="row">
+                                        <div><input type="text" value="{{orders.batch_id}}" name="batch_id" readonly></div>
+                                        <div><input type="hidden" value="{{orders.order_id}}" name="order_id"></div>
+                                        <div class="col-md-6 form-group">
+                                             <div class="form-group mt-3">
+                                                  {{ form.csrf_token }}
+                                                 <span  class="input-group-addon"><b>Fish</b></span>
+                                             </div>
+                                            <input name="fish" type="text" class="form-control" value="{{orders.fish_type}}" readonly>
+
+                                        </div>
+                                       <div class="form-group mt-3">
+                                        <span class="input-group-addon">Quantity</span>
+                                        <input type="hidden" value="{{orders.quantity_kg}}" class="form-control" name="quantity">
+                                        <input type="number" value="{{orders.quantity_kg}}" class="form-control" name="quantity_kg" readonly
+                                               min="10" max="200" placeholder="number of quantity" required>
+                                       </div>
+                                       <div class="col-md-6 form-group">
+                                             <div class="form-group mt-3">
+                                          <span class="input-group-addon">Please select<b>Agent</b></span>
+                                          {{ form2.agents(class="form-control", value="{{orders.agent}}")}}
+                                            </div>
+                                       </div><!-- div fields-->
+                                <div class="form-group mt-3">
+                                        <span class="input-group-addon">Date</span>
+                                     <input type="hidden" value="{{orders.order_date}}" class="form-control" name="date_value"  placeholder="Date of Order" required>
+                                     <input type="date" value="{{orders.order_date}}" class="form-control" name="date"  placeholder="Date of Order" required>
+                                </div>
+                                <div class="form-group mt-3">
+                                     <span class="input-group">State of Order</span>
+                                     <select name="state" value="{{orders.state}}" class="selectpicker form-control" required>
+                                         {% for o in state %}
+                                         <option value="{{ o.state }}">{{ o.state }}</option>
+                                                          {% endfor %}
+                                     </select>
+                                </div>
+                                    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                            <div class="col"><button class="btn btn-primary" type="submit" onclick="alert('Are you sure of All Data')">Edit</button>
+                                            </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </form>
+                         </div>
+                        </div>
+                      </div>
+                    </div>
+
+ <!-----------------END MODEL Order --------------------->
+                 {% endfor %}
+             </table>
+        </div>
+            <ul class="pagination">
+            {% if orders.has_prev  %}
+                  <li class="page-item"><a class="page-link"
+                    href="{{ url_for('order', page_num=orders.prev_num) }}">
+                    <<</a></li>
+                {% else %}
+                    <li class="page-item disabled">
+                <span class="page-link"><<
+                </span></li>
+            {% endif %}
+
+            {% for page in orders.iter_pages(left_edge=3, right_edge=3) %}
+                    {% if page %}
+                    <li class="page-item"><a class="page-link"
+                        href="{{ url_for('order', page_num=page) }}">
+                        {{page}}</a></li>
+                    {% else %}
+                    <li class="page-item disabled" id="example_ellipsis">
+                        <a class="page-link" href="#" >
+                        {{page}}</a></li>
+                    {% endif%}
+            {% endfor %}
+             {% if orders.has_next  %}
+                  <li class="page-item"><a class="page-link"
+                    href="{{ url_for('order', page_num=orders.next_num) }}">
+                    >></a></li>
+                {% else %}
+                    <li class="page-item disabled">
+                <span class="page-link">>>
+                </span></li>
+           <li class="page-item">
+                    <a href="{{url_for('order', page_num=orders.page)}}" style="font-color:blue" class="page-link ">
+                         All
+                     </a>
+                </li>
+            {% endif %}
+
+        </ul>
+
+        <!----------------------------ENF FOR AND TABLE---------------------------->
+             <!--  ADD ORDERS  -->
+             <div id="mymodal" class="modal fade" role="dialog">
+	            <div class="modal-dialog modal-dialog-scrollable">
+	            	<div class="modal-content">
+                       <div class="modal-header "> <div><h4 class="modal-title" style="color:#e9ecef;   text-align: center;">
+                           <b>Add Order</b>  </h4></div>
+                        </div>
+			        <div class="modal-body">
+                        <form action="{{url_for('insert_order')}}" method="POST">
+				    	    <div class="form-group">
+                                <div class="row">
+                                     <div class="col-md-6 form-group">
+                                        {{ form.csrf_token}}
+                                        <div class="form-group mt-3">
+                                          <span class="input-group-addon">Please select<b>Fish</b></span>
+                                          {{ form.fish(class="form-control")}}
+                                         </div>
+                                     </div>
+                                     <div class="form-group mt-3">
+                                        <span class="input-group-addon">Quantity</span>
+                                        <input type="number" class="form-control"
+                                               min="10" max="200" name="quantity_kg" id="quantity_kg" placeholder="number of quantity" required>
+                                     </div>
+                                     <div class="col-md-6 form-group">
+                                                   {{ form2.csrf_token}}
+                                        <div class="form-group mt-3">
+                                          <span class="input-group-addon">Please select<b>Agent</b></span>
+                                          {{ form2.agents(class="form-control")}}
+                                        </div>
+                                     </div>
+                                </div>
+                            </div><!-- div fields-->
+                                <div class="form-group mt-3">
+                                        <span class="input-group-addon">Date</span>
+                                     <input type="date" class="form-control" name="date" id="date" placeholder="Date of Order" required>
+                                </div>
+                                <div class="form-group mt-3">
+                                     <span class="input-group-addon">State of Order</span>
+                                     <select name="state" class="selectpicker form-control" required>
+                                                {% for o in state %}
+                                         <option >{{ o.state }}</option>
+                                                          {% endfor %}
+                                     </select>
+                                </div>
+                                     <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                        <div class="col"><button class="btn btn-primary" type="submit">Add</button></div>
+                                        <div class="col"><button class="btn btn-primary"  type="reset" >Clear</button></div>
+                                    </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+             </div>
+<!-----------------END MODEL Order --------------------->
+
+    </div>
+</section>
+<section>
+<footer id="footer">
+     <div class="footer-top">
+         <div class="container">
+        &copy; Copyright <strong><span>CFA</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX data form: https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/ -->
+      </div>
+    </div>
+  </footer></section>
+ <!-- End Footer -->
+ {% endblock %}
+<script type="txt/javascript" src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='bootstrap-5.1.0-dist/js/bootstrap.min.js')}}"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='bootstrap-5.1.0-dist/js/bootstrap.bundle.min.js')}}"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='app.js')}}" ></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='app.js')}}">
+    </script>

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block body %}
+ <header id="header" style="align:center; ">
+     <h3 style="font-family: Arial; color: blue; align-items: center;">
+         <b> Login </b>
+     </h3>
+ </header>
+<section id="hero-container">
+<div id="mymodal" style="hiegh:450px; width:500px; justify-item:center; margin-left=300px;" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <div>
+                    <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                        <b> Admin Login </b>
+                    </h4>
+                    {% with messages= get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <div class="alert alert-success alert-dimissble" role="alert">
+                     {{message}}
+                     <button type="button" class="btn-close" data-dismiss="alert"
+                              onclick="close()"></button>
+                 </div>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+                </div>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('admin')}}" style="margin-left=300px;" method="POST">
+                    <div class="form-group">
+                        <div class="col">
+                            <div class="col-md-6 form-group">
+                                <label for="user_name" class="input-group-addon"> User name  </label>
+                                <input type="text" class="form-control"
+                                       name="user_name" id="user_name" placeholder="User name"  required>
+                            </div><br>
+                            <div class="col-md-6 form-group">
+                                <label for="pass" class="input-group-addon"> Password </label>
+                                <input type="password" class="form-control"
+                                       name="password" id="pass" placeholder="Password"  required>
+                            </div>
+                        </div>
+                            <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                <div class="col">
+                                    <button class="btn btn-primary btn-lg" type="submit"
+                                            data-bs-toggle="modal" data-bs-target="#mymodal">Login</button>
+                                </div>
+
+                            </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+ {% endblock %}

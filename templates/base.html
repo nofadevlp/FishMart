@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css"
+			  href="{{ url_for('static', filename='css/bootstrap.css')}}">
+		<link rel="stylesheet" type=text/css href="{{url_for('static', filename='css/bootstrap-grid.css')}}">
+		<link rel="stylesheet" type=text/css href="{{url_for('static', filename='css/bootstrap-min.css')}}">
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+    <link rel="stylesheet"
+        href=
+"https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+
+	 {% if custom_css %}
+            <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"/>-->
+	  {% endif%}
+		<title> {{title}} </title>
+	</head>
+	<body>
+    <header id="header">
+<!----------------------------------------------------<lord-icon
+    src="https://cdn.lordicon.com/unqahzti.json"
+    trigger="loop"
+    colors="primary:#121331,secondary:#3080e8"
+    style="width:250px;height:250px">
+</lord-icon>
+------>
+     <nav class="navbar navbar-default navbar-fixed-top">
+        <ul class="navbar-brand">
+            <li class="navbar li"><a class="navbar nav-link scrollto " href="/loads/1"><h4 class="navbar-text">Deliver Loads</h4></a></li>
+            <li class="navbar li"><a class="nav-link scrollto" href="/order/1"><h4 class="navbar-text">Orders</h4></a></li>
+            <li class="navbar li"><a class="nav-link scrollto" href="/fishes"><h4 class="navbar-text">Fishes</h4></i></a>
+            <li class="navbar li"><a class="nav-link scrollto" href="/agent/1"><h4 class="navbar-text">Agents</h4></i></a>
+            <li class="navbar li"><a class="nav-link scrollto" href="/boat/1"><h4 class="navbar-text">Fishing Boats</h4></i></a>
+            <li class="navbar li"><a class="nav-link scrollto" href="/report"><h4 class="navbar-text">Reports</h4></i></a>
+        </ul>
+             <a href="/loads/1" target="_self">
+                <img id="logo" class="pull-right" src="https://img.icons8.com/ios-filled/100/000000/fish.png"
+                     border="0" alt=" CFA " style="vertical-align:middle;">
+             </a>
+     </nav>
+ </header>
+    {% block body %}
+        {% endblock %}
+	<script type="txt/javascript" src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='js/bootstrap.min.js')}}" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+ <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+     <script type="text/javascript"
+          src="https://code.jquery.com/jquery-3.5.1.js">
+  </script>
+
+  <!-- DataTables CSS -->
+
+
+  <!-- DataTables JS -->
+  <script src=
+"https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js">
+  </script>
+         <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
+
+ <!-- End Footer -->
+    </body>
+	</html>

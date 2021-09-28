@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css"
+			  href="{{ url_for('static', filename='css/bootstrap.css')}}">
+		<link rel="stylesheet" type=text/css href="{{url_for('static', filename='css/bootstrap-grid.css')}}">
+		<link rel="stylesheet" type=text/css href="{{url_for('static', filename='css/bootstrap-min.css')}}">
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+
+<!--	 {% if custom_css %}-->
+<!--            <link rel="stylesheet" href="{{ url_for('static', filename= custom_css + '.css') }}"/>-->
+<!--	  {% endif%}-->
+	</head>
+	<body>
+ <header id="header">
+         <a href="/report" > <img src="https://img.icons8.com/ios-filled/100/000000/fish.png"/>
+		 </a>
+ </header>
+    <div>{% block body %}
+        {% endblock %}</div>
+	<script type="txt/javascript" src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='js/bootstrap.min.js')}}" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+	<script type="txt/javascript" src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+ <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    </body>
+	</html>

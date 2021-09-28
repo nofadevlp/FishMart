@@ -1,0 +1,291 @@
+from app import db
+
+
+class Boats(db.Model):
+    # table name
+    __tablename__ = 'boats'
+    # columns
+    boat_id = db.Column("boat_id", db.Integer(), primary_key=True, autoincrement='auto')
+    boat_name = db.Column("boat_name", db.String(50), nullable=False)
+    licences = db.Column("licences", db.String(200), unique=True, nullable=False)
+
+    def __init__(self, boat, licences):
+        self.boat_name = boat
+        self.licences = licences
+
+
+class Agents(db.Model):
+    # table name
+    __tablename__ = 'agents'
+    # columns
+    agent_id = db.Column("agent_id", db.Integer(), primary_key=True, autoincrement='auto')
+    agent_serial = db.Column("agent_serial", db.String(50), unique=True, nullable=False )
+    agent_name = db.Column("agent_name", db.String(50), nullable=False)
+
+    def __init__(self, serial, agent):
+        self.agent_serial = serial
+        self.agent_name = agent
+
+
+class Fishes(db.Model):
+    __tablename__ = 'fishes'
+    # columns
+    fish_id = db.Column("fish_id", db.Integer(), primary_key=True, autoincrement='auto')
+    fish_type = db.Column("fish_type", db.String(50), nullable=False, unique=True)
+
+    def __init__(self, fish):
+        self.fish_type = fish
+
+
+class DeliverLoads(db.Model):
+    __tablename__ = 'deliver_loads'
+    # columns
+    id = db.Column("id", db.Integer(), primary_key=True, autoincrement='auto')
+    load_id = db.Column("load_id", db.Integer(), unique=True, nullable=False)
+    boat = db.Column("boat", db.String(50), db.ForeignKey("boats.licences"), nullable=False)
+    load_date = db.Column("load_date")
+    fish_type = db.Column("fish_type", db.String(100), db.ForeignKey("fishes.fish_type"), nullable=False)
+    quantity_kg = db.Column("quantity_kg", db.Integer(), nullable=False)
+
+    def __init__(self, load_id, boat, date, f_type, quantity):
+        self.load_id = load_id
+        self.boat = boat
+        self.load_date = date
+        self.fish_type = f_type
+        self.quantity_kg = quantity
+
+
+class Batches(db.Model):
+    __tablename__ = 'batches'
+    # columns
+    id = db.Column("id", db.Integer(), primary_key=True, autoincrement='auto')
+    batch_id = db.Column("batch_id", db.Integer(), db.ForeignKey("deliver_loads.load_id"))
+    boat = db.Column("boat", db.String(50), db.ForeignKey("boats.licences"), nullable=False)
+    exp_date = db.Column("exp_date")
+    distribute_date = db.Column("distribute_date")
+    agent = db.Column("agent", db.String(50), db.ForeignKey("agents.agent_serial"), nullable=False)
+    track = db.Column("track", db.String(100), nullable=False)
+
+    def __init__(self, bat_id, boat, exp, distrbute, agent, track):
+        self.batch_id = bat_id
+        self.boat = boat
+        self.exp_date = exp
+        self.distribute_date = distrbute
+        self.agent = agent
+        self.track = track
+
+
+class Orders(db.Model):
+    __tablename__ = 'orders'
+    # columns
+    order_id = db.Column("order_id", db.Integer(), primary_key=True, autoincrement='auto')
+    fish_type = db.Column("fish_type", db.String(50), db.ForeignKey("fishes.fish_type"), nullable=False)
+    quantity_kg = db.Column("quantity_kg", db.Integer(), nullable=False)
+    agent = db.Column("agent", db.String(50), db.ForeignKey("agents.agent_serial"), nullable=False)
+    order_date = db.Column("order_date")
+    state = db.Column("state", db.String(50), nullable=False)
+
+    def __init__(self, f_type, quan, agent, date, state):
+        self.fish_type = f_type
+        self.quantity_kg = quan
+        self.agent = agent
+        self.order_date = date
+        self.state = state
+
+
+
+{% extends 'base.html' %}
+{% block body %}
+<section id="hero">
+    <div class="hero-container" data-aos="fade-up">
+     <div class="jumbotron p-3">
+                 <h2>Manage <b>Agent</b>
+                     <!---------------- Button modal----------------->
+                     <button id="myBtn" type="button" class="btn btn-success btn-lg"
+                             data-bs-toggle="modal" data-bs-target="#myagent">Add Agent</button>
+                 </h2>
+                 {% with messages= get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <div class="alert alert-success alert-dimissble" role="alert">
+                     {{message}}
+                     <button type="button" class="btn-close" data-dismiss="alert"
+                              onclick="close()"></button>
+                 </div>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+             </div>
+     <table border="1" class="table table-hover table-dark">
+                <tr aria-owns="10">
+                  <th>Agent id</th>
+                  <th> Agent name</th>
+                  <th> Agent serial number</th>
+                  <th colspan="2"> Actions </th>
+                </tr>
+                 {% for row in agent %}
+                <tr>
+                     <td>{{row.agent_id}}</td>
+                     <td>{{row.agent_name}}</td>
+                    <td>{{row.agent_serial}}</td>
+                     <td>
+                         <a href="/update_agent/{{row.agent_id}}" class="btn btn-warning btn-x btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#agentedit">Edit</a>
+                     </td>
+                    <td>
+                         <a href="/delete_agent/{{row.agent_id}}" class="btn btn-danger btn-x btn-lg"
+                            onclick="return confirm('Are you sure to delete')">Delete</a>
+                    </td>
+                </tr>
+             <div id="agentedit" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+                 <div class="modal-content">
+                     <div class="modal-header ">
+                         <div>
+                             <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                                 <b> Agent </b>
+                             </h4>
+                               </div>
+                     </div>
+                     <div class="modal-body">
+                        <form action="{{url_for('update_agent')}}" style="margin-left=300px;" method="POST">
+                            <div class="form-group">
+                                <div class="col">
+                                    <input type="hidden" value="{{row.agent_id}}" name="id">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent_name" class="input-group-addon"> Agent name </label>
+                                        <input type="text" class="form-control"
+                                       name="agent" id="agent_name" value="{{row.agent_name}}" placeholder="Agent name" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent_serial" class="input-group-addon"> Agent serial </label>
+                                        <input type="text" class="form-control"
+                                       name="serial" id="agent_serial" value="{{row.agent_serial}}" placeholder="Agent serial" required>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                    <div class="col">
+                                        <button class="btn btn-primary btn-lg" type="submit">Edit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                     </div>
+                 </div>
+                </div>
+             </div>
+           {% endfor %}
+     </table>
+        <div class="row">
+             <div id="myagent" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+                 <div class="modal-content">
+                     <div class="modal-header ">
+                         <div>
+                             <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                                 <b> Agent</b>
+                             </h4>
+                         </div>
+                     </div>
+                     <div class="modal-body">
+                        <form action="{{url_for('add_agent')}}" style="margin-left=300px;" method="POST">
+                            <div class="form-group">
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent" class="input-group-addon"> Agent name </label>
+                                        <input type="text" class="form-control"
+                                       name="agent" id="agent" placeholder="Agent name" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="agent" class="input-group-addon"> Agent Serial </label>
+                                        <input type="text" class="form-control"
+                                       name="serial" id="serial" placeholder="Agent Serial" required>
+                                    </div>
+                                </div>
+
+                                <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                    <div class="col">
+                                        <button class="btn btn-primary" type="submit"
+                                            data-bs-toggle="modal" data-bs-target="#myagent">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                      </div>
+                 </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</section>
+ <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        &copy; Copyright <strong><span>CFA</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer>
+ <!-- End Footer -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ {% endblock %}
+
+
+
+
+
+@app.route("/agent")
+def agent():
+    all = Agents.query.all()
+    return render_template("agent.html", agent=all)
+
+
+@app.route("/agents", methods=['POST'])
+def add_agent():
+    try:
+        if request.method == 'POST':
+            agent = request.form['agent']
+            serial = request.form['serial']
+            my_agent = Agents(agent, serial)
+            db.session.add(my_agent)
+            db.session.commit()
+            flash("Add agent successfully".capitalize())
+            return redirect(url_for('agent'))
+    except:
+        flash("Add agent un successfully".capitalize())
+        return redirect(url_for('agent'))
+
+
+@app.route('/update_agent', methods=['GET', 'POST'])
+def update_agent():
+    try:
+        if request.method == 'POST':
+            my_agent = Agents.query.get(request.form.get('id'))
+            my_agent.agent_name = request.form['agent']
+            my_agent.agent_serial = request.form['serial']
+            db.session.commit()
+            flash("agent Edit Successfully".capitalize())
+            return redirect(url_for('agent'))
+    except:
+        flash("Edit agent un successfully".capitalize())
+        return redirect(url_for('agent'))
+
+
+@app.route('/delete_agent/<id>', methods=['GET', 'POST'])
+def delete_agent(id):
+    try:
+        my_agent = Agents.query.get(id)
+        db.session.delete(my_agent)
+        db.session.commit()
+        flash("Agent deleted successfully".capitalize())
+        return redirect(url_for('agent'))
+    except:
+        flash("Delete agent successfully".capitalize())
+        return redirect(url_for('agent'))

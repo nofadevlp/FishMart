@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block body %}
+ <div id="hero">
+    <div class="hero-container" data-aos="fade-up">
+     <div class="jumbotron p-3">
+                 <h2>Manage <b>Fish</b>
+                     <!---------------- Button modal----------------->
+                     <button id="myBtn" type="button" class="btn btn-success btn-lg"
+                             data-bs-toggle="modal" data-bs-target="#mymodal">Add Fish</button>
+                 </h2>
+                 {% with messages= get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <div class="alert alert-success alert-dimissble" role="alert">
+                     {{message}}
+                     <button type="button" class="btn-close" data-dismiss="alert"
+                              onclick="close()"></button>
+                 </div>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+             </div>
+        <div class="col-md-9">
+
+            <table id="table_id" style="width:100%" border="1"  class="table display table-bordered table-hover table-responsive table-striped table-light table-sm datatable">
+                <tr aria-owns="10">
+                  <th>Fish type</th>
+                  <th colspan="2"> Actions </th>
+                </tr>
+                 {% for row in fish %}
+                <tr>
+                    <td>{{row.fish_type}}</td>
+                     <td>
+                         <a href="/update_fish/{{row.fish_id}}" class="btn btn-warning btn-x btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#modaledit">Edit</a>
+                     </td>
+                    <td>
+                         <a href="/delete_fish/{{row.fish_id}}" class="btn btn-danger btn-x btn-lg"
+                            onclick="return confirm('Are you sure to delete')">Delete</a>
+                    </td>
+                </tr>
+             <div id="modaledit" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+                 <div class="modal-content">
+                     <div class="modal-header ">
+                         <div>
+                             <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                                 <b> Fish</b>
+                             </h4>
+                                    {% with messages= get_flashed_messages() %}
+                                 {% if messages %}
+                                 {% for message in messages %}
+                             <div class="alert alert-success alert-dimissble" role="alert">
+                                     {{message}}
+                                 <button type="button" class="btn-close" data-dismiss="alert"
+                                          onclick="close()"></button>
+                             </div>
+                                 {% endfor %}
+                                 {% endif %}
+                                 {% endwith %}
+                         </div>
+                     </div>
+                     <div class="modal-body">
+                        <form action="{{url_for('update_fish')}}" style="margin-left=300px;" method="POST">
+                            <div class="form-group">
+                                <div class="col">
+                                    <input type="hidden" value="{{row.fish_id}}" name="id">
+                                    <div class="col-md-6 form-group">
+                                        <label for="fish" class="input-group-addon"> Fish  </label>
+                                        <input type="text" class="form-control"
+                                       name="fish" id="update_fish" value="{{row.fish_type}}" placeholder="Fish type" required>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                    <div class="col">
+                                        <button class="btn btn-primary btn-lg" type="submit">Edit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                     </div>
+                 </div>
+                </div>
+             </div>
+           {% endfor %}
+     </table>
+        </div>
+        <div class="row">
+             <div id="mymodal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-scrollable">
+                 <div class="modal-content">
+                     <div class="modal-header ">
+                         <div>
+                             <h4 class="modal-title" style="color:#e9ecef;text-align: center; color: black;">
+                                 <b> Fish</b>
+                             </h4>
+                                    {% with messages= get_flashed_messages() %}
+                                 {% if messages %}
+                                 {% for message in messages %}
+                             <div class="alert alert-success alert-dimissble" role="alert">
+                                     {{message}}
+                                 <button type="button" class="btn-close" data-dismiss="alert"
+                                          onclick="close()"></button>
+                             </div>
+                                 {% endfor %}
+                                 {% endif %}
+                                 {% endwith %}
+                         </div>
+                     </div>
+                     <div class="modal-body">
+                        <form action="{{url_for('add_fish')}}" style="margin-left=300px;" method="POST">
+                            <div class="form-group">
+                                <div class="col">
+                                    <div class="col-md-6 form-group">
+                                        <label for="fish" class="input-group-addon"> Fish </label>
+                                        <input type="text" class="form-control"
+                                       name="fish" id="fish" placeholder="Fish type"  required>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3" style="justify-content:center; height:auto; margin-top:5px;">
+                                    <div class="col">
+                                        <button class="btn btn-primary btn-lg" type="submit"
+                                            data-bs-toggle="modal" data-bs-target="#myfish">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                     </div>
+                 </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        &copy; Copyright <strong><span>CFA</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX data form: https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/ -->
+      </div>
+    </div>
+  </footer>
+
+<!--------------------------------END  Fish ------------------------------------------------------->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ {% endblock %}
